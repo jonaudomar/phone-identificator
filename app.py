@@ -1,7 +1,7 @@
 import streamlit as st
 import time
 
-st.title('Vérificateur de spam')
+st.title('Vérificateur de spam téléphonique')
 
 prospection = ['0162', '0163', '0270', '0271', '0377', '0378', '0424', '0425', '0568', '0569', '0948', '0949', '09475', '09476', '09477', '09478', '09479']
 
@@ -31,15 +31,20 @@ def is_spam(appelant:str):
             break
     return 'spam' if spam else 'tout va bien'
 
-
-numero = st.text_input('Entrez un numéro de téléphone à 10 chiffres :')
+numero = st.text_input("Entrez un numéro de téléphone à 10 chiffres :")
 numero = appelant_normalized(numero)
 
-if st.button('Vérifier', type='primary'):
-    with st.spinner("Wait for it...", show_time=True):
-        time.sleep(1.7)
+if len(numero) != 10:
+    st.warning("Le numéro doit contenir exactement 10 chiffres ci-dessus.")
+elif len(numero) == 10:
+    st.success("Numéro valide ✅")
+    st.success("Cliquez sur 'Vérifier' pour poursuivre l'analyse anti-spam.")
 
-    if is_spam(numero) == 'spam':
-        st.warning('Ceci est très probablement un spam !')
-    else:
-        st.success('Ce numéro semble fiable')
+    if st.button('Vérifier', type='primary'):
+        with st.spinner("Wait for it...", show_time=True):
+            time.sleep(1.7)
+
+        if is_spam(numero) == 'spam':
+            st.error('Ceci est très probablement un spam !')
+        else:
+            st.success('Ce numéro semble fiable')
