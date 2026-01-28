@@ -5,6 +5,20 @@ st.title('Vérificateur de spam')
 
 prospection = ['0162', '0163', '0270', '0271', '0377', '0378', '0424', '0425', '0568', '0569', '0948', '0949', '09475', '09476', '09477', '09478', '09479']
 
+def appelant_normalized(number: str) -> str:
+    """
+    Nettoie la chaine de caractères du préfixe télphonique et des caractères non numériques.
+    """
+    value = ''.join(c for c in number if c.isdigit())
+
+    if value.startswith('33'):
+        value = '0' + value[2:]
+
+    if value.startswith('0033'):
+        value = '0' + value[4:]
+
+    return value
+
 def is_spam(appelant:str):
     """
     Cette fonction vérifie si un numéro est probablement un appel commercial indésirable.
@@ -19,6 +33,7 @@ def is_spam(appelant:str):
 
 
 numero = st.text_input('Entrez un numéro de téléphone à 10 chiffres :')
+numero = appelant_normalized(numero)
 
 if st.button('Vérifier', type='primary'):
     with st.spinner("Wait for it...", show_time=True):
